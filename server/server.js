@@ -10,7 +10,7 @@ const app = express();
 app.use(express.json());
 app.use(cors({
     origin: 'http://localhost:5173',
-    methods: ['GET', 'POST', 'DELETE'],
+    methods: ['GET', 'POST', 'DELETE', 'PUT'],
     credentials: true
 }));
 
@@ -47,6 +47,20 @@ mongoose.connect(process.env.MONGO_URI)
                 res.status(200).json({ message: "Libro eliminado" });
             } catch (error) {
                 res.status(400).json({ error: "Error eliminando libro" });
+            }
+        });
+
+        // UPDATE Libro
+        app.put('books/:id', async (req, res) => {
+            try {
+                const updateBook = await Book.findByIdAndUpdate(
+                    req.params.id,
+                    req.body,
+                    { new: true }
+                );
+                res.json(updateBook);
+            } catch (error) {
+                res.status(400).json({ error: "Error al updatear libro"})
             }
         });
 

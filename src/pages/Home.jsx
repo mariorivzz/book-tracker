@@ -10,6 +10,7 @@ export default function Home() {
         rating: 0, // Cambiado de string a number
         read: false
     });
+    const [editingId, setEditingId] = useState(null);
 
     // Obtener los libros al cargar la página
     useEffect(() => {
@@ -56,6 +57,27 @@ export default function Home() {
             console.error("Error deleting book:", error);
         }
     };
+
+    // Updatear un libro
+    const updateBook = async (id) => {
+        try {
+            await axios.put(`http://localhost:5000/books/${id}`);
+            fetchBooks();
+        } catch (error) {
+            console.error("Error updating book:", error);
+        }  
+    }
+
+    // Funcion para editar el libro
+    const editBook = async (id) => {
+        try {
+            await axios.put(`http://localhost:5000/books/${id}`);
+            setBooks({ title: "", description: "", rating: "", read: false });
+            fetchBooks();
+        } catch (error) {
+            console.error("Error updating book:", error);
+        }  
+    }
 
     return (
         <div style={{ padding: "20px" }}>
@@ -105,7 +127,10 @@ export default function Home() {
                     <li key={book._id}>
                         <strong>{book.title}</strong> - {book.description} - Nota: {book.rating} - 
                         {book.read ? " ✅ Leído" : " ❌ No leído"}
+                        <button>Editar</button>
+                        <button onClick={() => putBook(book._id)}>Updatear</button>
                         <button onClick={() => deleteBook(book._id)}>Eliminar</button>
+                        
                     </li>
                 ))}
              </ul>
